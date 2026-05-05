@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CTP</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>CTP - Registro de Atendimentos</h1>
+            <p>Sistema simples para registrar, acompanhar e gerar relatórios de atendimentos técnico-pedagógicos.</p>
+            <nav>
+                <a href="index.html">Início</a>
+                <a href="formulario.html">Novo atendimento</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="relatorios.html">Relatórios</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="card">
+            <h2>Dashboard local de testes</h2>
+            <p>Esta página mostra os registros salvos neste navegador. Quando a integração com Excel Online estiver ativa, o dashboard principal poderá ser feito no Excel ou no Power BI.</p>
+            <button class="button danger" id="limparDados">Limpar dados de teste</button>
+        </section>
+
+        <section class="grid grid-3">
+            <div class="stat">
+                <span>Total de atendimentos</span>
+                <strong id="totalAtendimentos">0</strong>
+            </div>
+            <div class="stat">
+                <span>Total de horas</span>
+                <strong id="totalHoras">0h</strong>
+            </div>
+            <div class="stat">
+                <span>Principal canal</span>
+                <strong id="principalCanal">-</strong>
+            </div>
+        </section>
+
+        <section class="card">
+            <h3>Últimos registros</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Canal</th>
+                            <th>Instituição</th>
+                            <th>Nome</th>
+                            <th>Cargo</th>
+                            <th>Tecnologia</th>
+                            <th>Duração</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaRegistros"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>CTP - Registro de Atendimentos</p>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
