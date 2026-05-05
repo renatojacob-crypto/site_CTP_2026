@@ -43,7 +43,7 @@
                             <option value="WhatsApp">WhatsApp</option>
                             <option value="E-mail">E-mail</option>
                             <option value="Teams">Teams</option>
-                            <option value="Telefone">Telefone</option>
+                            <option value="Calendly">Calendly</option>
                             <option value="Presencial">Presencial</option>
                             <option value="Outro">Outro</option>
                         </select>
@@ -76,8 +76,9 @@
                             <option value="Professor(a)">Professor(a)</option>
                             <option value="Coordenador(a)">Coordenador(a)</option>
                             <option value="Diretor(a)">Diretor(a)</option>
-                            <option value="Secretaria">Secretaria</option>
-                            <option value="Equipe pedagógica">Equipe pedagógica</option>
+                            <option value="Orientador ZOOM">Orientador ZOOM</option>
+                            <option value="Monitor ZOOM">Monitor ZOOM</option>
+                            <option value="Gerência ZOOM">Gerência ZOOM</option>
                             <option value="Outro">Outro</option>
                         </select>
                     </div>
@@ -89,7 +90,7 @@
                             <option value="Dúvida pedagógica">Dúvida pedagógica</option>
                             <option value="Dúvida técnica">Dúvida técnica</option>
                             <option value="Orientação de aula">Orientação de aula</option>
-                            <option value="Acesso à plataforma">Acesso à plataforma</option>
+                            <option value="Mundo Z">Mundo Z</option>
                             <option value="Tecnologia educacional">Tecnologia educacional</option>
                             <option value="Outro">Outro</option>
                         </select>
@@ -100,36 +101,51 @@
                         <select id="segmento" name="segmento" required>
                             <option value="">Selecione</option>
                             <option value="Educação Infantil">Educação Infantil</option>
-                            <option value="Ensino Fundamental I">Ensino Fundamental I</option>
-                            <option value="Ensino Fundamental II">Ensino Fundamental II</option>
+                            <option value="Ensino Fundamental Anos Iniciais">Ensino Fundamental Anos Iniciais</option>
+                            <option value="Ensino Fundamental Anos Finais">Ensino Fundamental Anos Finais</option>
                             <option value="Ensino Médio">Ensino Médio</option>
-                            <option value="Ensino Técnico">Ensino Técnico</option>
                             <option value="Outro">Outro</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="programa">Programa</label>
-                        <input type="text" id="programa" name="programa" placeholder="Ex.: Jornada Z, ZOOM..." required>
-                    </div>
+                        <select id="programa" name="programa" required>
+                            <option value="">Selecione</option>
+                            <option value="Jornada Z">Jornada Z</option>
+                            <option value="Eng. Pensamento Computacional">Eng. Pensamento Computacional</option>
+                            <option value="ZOOM Ensino Médio">ZOOM Ensino Médio</option>
+                            <option value="GameDEV">GameDEV</option>
+                            <option value="GameDEV 2">GameDEV 2</option>
+                            <option value="AppdEV">AppDEV</option>
+                            <option value="Arduino">Arduino</option>
+                            <option value="Outro">Outro</option>
+                        </select>                    </div>
 
                     <div class="form-group">
                         <label for="tecnologia">Tecnologia envolvida</label>
-                        <select id="tecnologia" name="tecnologia" required>
-                            <option value="">Selecione</option>
+                        <select id="tecnologia" name="tecnologia" multiple required size="7">
                             <option value="Micro:bit">Micro:bit</option>
                             <option value="LEGO EV3">LEGO EV3</option>
                             <option value="LEGO SPIKE">LEGO SPIKE</option>
                             <option value="Scratch">Scratch</option>
-                            <option value="Plataforma ZOOM">Plataforma ZOOM</option>
-                            <option value="HUB NOUS">HUB NOUS</option>
+                            <option value="Mundo Z">Mundo Z</option>
+                            <option value="NOUS AI">NOUS AI</option>
+                            <option value="Vincibot">Vincibot</option>
+                            <option value="MatataLab Lite">Matatalab Lite</option>
+                            <option value="Talebot">Talebot</option>
+                            <option value="Arduino">Arduino</option>
+                            <option value="Makecode Arcade">Makecode Arcade</option>
+                            <option value="Eletrônica ZOOM">MEletrônica ZOOM</option>
+                            <option value="TechToc">TechToc</option>
                             <option value="Outro">Outro</option>
                         </select>
+                        <small>Segure Ctrl para selecionar mais de uma opção. No Mac, segure Command.</small>
                     </div>
 
                     <div class="form-group">
                         <label for="aulaAtividade">Aula ou atividade</label>
-                        <input type="text" id="aulaAtividade" name="aulaAtividade" placeholder="Ex.: Aula 03 - Sensor de luz">
+                        <input type="text" id="aulaAtividade" name="aulaAtividade" placeholder="Ex.: JOZ3-ENC01-Pra lá e pra cá">
                     </div>
                 </div>
 
@@ -145,7 +161,7 @@
     </main>
 
     <footer>
-        <p>CTP - Registro de Atendimentos</p>
+        <p>CTP - Central Técnico-Pedagogica ZOOM - Registro de Atendimentos - 2026</p>
     </footer>
 
     <script src="config.js"></script>

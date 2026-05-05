@@ -111,7 +111,7 @@ function iniciarFormulario() {
             tipoAtendimento: dados.get("tipoAtendimento"),
             segmento: dados.get("segmento"),
             programa: dados.get("programa"),
-            tecnologia: dados.get("tecnologia"),
+            tecnologia: dados.getAll("tecnologia").join(", "),
             aulaAtividade: dados.get("aulaAtividade"),
             descricao: dados.get("descricao"),
             duracaoMinutos: duracaoMinutos,
@@ -119,7 +119,7 @@ function iniciarFormulario() {
             mes: dados.get("data") ? dados.get("data").substring(5, 7) : "",
             ano: dados.get("data") ? dados.get("data").substring(0, 4) : "",
             criadoEm: new Date().toISOString()
-        };
+};
 
         try {
             const resultado = await enviarParaPowerAutomate(registro);
