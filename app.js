@@ -100,26 +100,27 @@ function iniciarFormulario() {
         }
 
         const registro = {
-            id: gerarId(),
-            data: dados.get("data"),
-            horarioInicial: horarioInicial,
-            horarioFinal: horarioFinal,
-            canal: dados.get("canal"),
-            instituicao: dados.get("instituicao"),
-            nome: dados.get("nome"),
-            cargo: dados.get("cargo"),
-            tipoAtendimento: dados.get("tipoAtendimento"),
-            segmento: dados.get("segmento"),
-            programa: dados.get("programa"),
-            tecnologia: dados.getAll("tecnologia").join(", "),
-            aulaAtividade: dados.get("aulaAtividade"),
-            descricao: dados.get("descricao"),
-            duracaoMinutos: duracaoMinutos,
-            duracaoFormatada: formatarDuracao(duracaoMinutos),
-            mes: dados.get("data") ? dados.get("data").substring(5, 7) : "",
-            ano: dados.get("data") ? dados.get("data").substring(0, 4) : "",
-            criadoEm: new Date().toISOString()
-};
+            "ID": gerarId(),
+            "Data": dados.get("data"),
+            "Horário Inicial do Atendimento": horarioInicial,
+            "Horário Final do Atendimento": horarioFinal,
+            "Canal": dados.get("canal"),
+            "Instituição": dados.get("instituicao"),
+            "Nome": dados.get("nome"),
+            "Cargo": dados.get("cargo"),
+            "Tipo de Atendimento": dados.get("tipoAtendimento"),
+            "Segmento": dados.get("segmento"),
+            "Programa": dados.get("programa"),
+            "Tecnologia Envolvida": dados.getAll("tecnologia").join(", "),
+            "Aula ou Atividade": dados.get("aulaAtividade"),
+            "Descrição do Problema": dados.get("descricaoProblema"),
+            "Descrição da Solução": dados.get("descricaoSolucao"),
+            "Duração em Minutos": duracaoMinutos,
+            "Duração Formatada": formatarDuracao(duracaoMinutos),
+            "Mês": dados.get("data") ? dados.get("data").substring(5, 7) : "",
+            "Ano": dados.get("data") ? dados.get("data").substring(0, 4) : "",
+            "Criado em": new Date().toISOString()
+        };
 
         try {
             const resultado = await enviarParaPowerAutomate(registro);
@@ -167,8 +168,8 @@ function iniciarDashboard() {
 
     const registros = obterRegistrosLocais();
 
-    const totalMinutos = registros.reduce((soma, item) => soma + Number(item.duracaoMinutos || 0), 0);
-    const canalMaisUsado = obterMaiorCategoria(contarPorCampo(registros, "canal"));
+    const totalMinutos = registros.reduce((soma, item) => soma + Number(item["Duração em Minutos"] || 0), 0);
+    const canalMaisUsado = obterMaiorCategoria(contarPorCampo(registros, "Canal"));
 
     document.getElementById("totalAtendimentos").textContent = registros.length;
     document.getElementById("totalHoras").textContent = formatarDuracao(totalMinutos);
@@ -181,13 +182,13 @@ function iniciarDashboard() {
         const linha = document.createElement("tr");
 
         linha.innerHTML = `
-            <td>${registro.data || ""}</td>
-            <td>${registro.canal || ""}</td>
-            <td>${registro.instituicao || ""}</td>
-            <td>${registro.nome || ""}</td>
-            <td>${registro.cargo || ""}</td>
-            <td>${registro.tecnologia || ""}</td>
-            <td>${registro.duracaoFormatada || ""}</td>
+            <td>${registro["Data"] || ""}</td>
+            <td>${registro["Canal"] || ""}</td>
+            <td>${registro["Instituição"] || ""}</td>
+            <td>${registro["Nome"] || ""}</td>
+            <td>${registro["Cargo"] || ""}</td>
+            <td>${registro["Tecnologia Envolvida"] || ""}</td>
+            <td>${registro["Duração Formatada"] || ""}</td>
         `;
 
         tabela.appendChild(linha);
