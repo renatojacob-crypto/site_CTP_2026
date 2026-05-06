@@ -321,7 +321,6 @@ body::before {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    color: white;
     padding: 0;
     border-bottom: 1px solid rgba(15, 23, 42, 0.08);
 }
