@@ -109,7 +109,7 @@ function iniciarFormulario() {
             "Nome": dados.get("nome"),
             "Cargo": dados.get("cargo"),
             "Tipo de Atendimento": dados.get("tipoAtendimento"),
-            "Segmento": dados.get("segmento"),
+            "Segmento": dados.getAll("segmento").join(", "),
             "Programa": dados.get("programa"),
             "Tecnologia Envolvida": dados.getAll("tecnologia").join(", "),
             "Aula ou Atividade": dados.get("aulaAtividade"),
@@ -119,7 +119,7 @@ function iniciarFormulario() {
             "Duração Formatada": formatarDuracao(duracaoMinutos),
             "Mês": dados.get("data") ? dados.get("data").substring(5, 7) : "",
             "Ano": dados.get("data") ? dados.get("data").substring(0, 4) : "",
-            "Criado em": new Date().toISOString()
+            "Criado Em": new Date().toISOString()
         };
 
         try {

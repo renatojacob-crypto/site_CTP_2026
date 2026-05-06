@@ -98,14 +98,15 @@
 
                     <div class="form-group">
                         <label for="segmento">Segmento</label>
-                        <select id="segmento" name="segmento" required>
-                            <option value="">Selecione</option>
+                        <select id="segmento" name="segmento" multiple required size="6">
                             <option value="Educação Infantil">Educação Infantil</option>
                             <option value="Ensino Fundamental Anos Iniciais">Ensino Fundamental Anos Iniciais</option>
                             <option value="Ensino Fundamental Anos Finais">Ensino Fundamental Anos Finais</option>
                             <option value="Ensino Médio">Ensino Médio</option>
+                            <option value="Ensino Técnico">Ensino Técnico</option>
                             <option value="Outro">Outro</option>
                         </select>
+                        <small>Segure Ctrl para selecionar mais de uma opção. No Mac, segure Command.</small>
                     </div>
 
                     <div class="form-group">
@@ -151,22 +152,12 @@
 
                 <div class="form-group">
                     <label for="descricaoProblema">Descrição do problema</label>
-                    <textarea 
-                        id="descricaoProblema" 
-                        name="descricaoProblema" 
-                        placeholder="Descreva o problema, dúvida ou dificuldade apresentada no atendimento." 
-                        required>
-                    </textarea>
+                    <textarea id="descricaoProblema" name="descricaoProblema" placeholder="Descreva o problema, dúvida ou dificuldade apresentada no atendimento." required></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="descricaoSolucao">Descrição da solução</label>
-                    <textarea 
-                        id="descricaoSolucao" 
-                        name="descricaoSolucao" 
-                        placeholder="Descreva a orientação, solução ou encaminhamento realizado." 
-                        required>
-                    </textarea>
+                    <textarea id="descricaoSolucao" name="descricaoSolucao" placeholder="Descreva a orientação, solução ou encaminhamento realizado." required></textarea>
                 </div>
 
                 <button class="button success" type="submit">Salvar atendimento</button>

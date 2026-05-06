@@ -386,7 +386,7 @@ function atualizarComponentes(registros) {
         "graficoSegmento",
         "doughnut",
         "Atendimentos por segmento",
-        contarPorCampo(registros, ["Segmento"])
+        contarValoresMultiplos(registros, ["Segmento"])
     );
 
     criarGrafico(
@@ -466,3 +466,25 @@ document.addEventListener("DOMContentLoaded", function() {
         filtroAno.addEventListener("change", atualizarPorFiltro);
     }
 });
+function contarValoresMultiplos(registros, nomesCampo) {
+    const contagem = {};
+
+    registros.forEach(registro => {
+        const valores = obterValor(registro, nomesCampo);
+
+        if (!valores) {
+            contagem["Não informado"] = (contagem["Não informado"] || 0) + 1;
+            return;
+        }
+
+        String(valores)
+            .split(",")
+            .map(item => item.trim())
+            .filter(item => item !== "")
+            .forEach(valor => {
+                contagem[valor] = (contagem[valor] || 0) + 1;
+            });
+    });
+
+    return contagem;
+}
