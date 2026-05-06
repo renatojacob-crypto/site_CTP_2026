@@ -1,8 +1,125 @@
 let graficosCriados = [];
+let registrosOriginais = [];
 
 function limparGraficos() {
     graficosCriados.forEach(grafico => grafico.destroy());
     graficosCriados = [];
+}
+
+function obterValor(registro, nomesPossiveis) {
+    for (const nome of nomesPossiveis) {
+        if (registro[nome] !== undefined && registro[nome] !== null && registro[nome] !== "") {
+            return registro[nome];
+        }
+    }
+
+    const chaves = Object.keys(registro);
+
+    for (const chave of chaves) {
+        const chaveNormalizada = normalizarTexto(chave);
+
+        for (const nome of nomesPossiveis) {
+            const nomeNormalizado = normalizarTexto(nome);
+
+            if (chaveNormalizada === nomeNormalizado) {
+                return registro[chave];
+            }
+        }
+    }
+
+    return "";
+}
+
+function normalizarTexto(texto) {
+    return String(texto || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase();
+}
+
+function converterDataExcel(valor) {
+    if (!valor) {
+        return "";
+    }
+
+    if (typeof valor === "string" && valor.includes("-")) {
+        const partes = valor.split("T")[0].split("-");
+        if (partes.length === 3) {
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+    }
+
+    if (!isNaN(valor)) {
+        const numero = Number(valor);
+        const dataBase = new Date(Date.UTC(1899, 11, 30));
+        const dataConvertida = new Date(dataBase.getTime() + numero * 86400000);
+
+        const dia = String(dataConvertida.getUTCDate()).padStart(2, "0");
+        const mes = String(dataConvertida.getUTCMonth() + 1).padStart(2, "0");
+        const ano = dataConvertida.getUTCFullYear();
+
+        return `${dia}/${mes}/${ano}`;
+    }
+
+    return valor;
+}
+
+function obterMesAno(registro) {
+    let mes = obterValor(registro, ["Mês", "Mes"]);
+    let ano = obterValor(registro, ["Ano"]);
+
+    mes = String(mes || "").padStart(2, "0");
+    ano = String(ano || "");
+
+    if (mes && ano && mes !== "00") {
+        return {
+            mes,
+            ano
+        };
+    }
+
+    const data = obterValor(registro, ["Data"]);
+
+    if (!data) {
+        return {
+            mes: "",
+            ano: ""
+        };
+    }
+
+    if (!isNaN(data)) {
+        const dataFormatada = converterDataExcel(data);
+        const partes = dataFormatada.split("/");
+
+        return {
+            mes: partes[1] || "",
+            ano: partes[2] || ""
+        };
+    }
+
+    if (String(data).includes("-")) {
+        const partes = String(data).split("T")[0].split("-");
+
+        return {
+            mes: partes[1] || "",
+            ano: partes[0] || ""
+        };
+    }
+
+    if (String(data).includes("/")) {
+        const partes = String(data).split("/");
+
+        return {
+            mes: partes[1] || "",
+            ano: partes[2] || ""
+        };
+    }
+
+    return {
+        mes: "",
+        ano: ""
+    };
 }
 
 function formatarDuracao(minutos) {
@@ -17,11 +134,11 @@ function formatarDuracao(minutos) {
     return `${horas}h ${mins}min`;
 }
 
-function contarPorCampo(registros, campo) {
+function contarPorCampo(registros, nomesCampo) {
     const contagem = {};
 
     registros.forEach(registro => {
-        const valor = registro[campo] || "Não informado";
+        const valor = obterValor(registro, nomesCampo) || "Não informado";
         contagem[valor] = (contagem[valor] || 0) + 1;
     });
 
@@ -32,15 +149,26 @@ function contarTecnologias(registros) {
     const contagem = {};
 
     registros.forEach(registro => {
-        const tecnologias = registro["Tecnologia Envolvida"] || "Não informado";
+        const tecnologias = obterValor(registro, [
+            "Tecnologia Envolvida",
+            "Tecnologia envolvida",
+            "Tecnologia",
+            "Tecnologias",
+            "TecnologiaEnvolvida"
+        ]);
 
-        tecnologias.split(",").forEach(item => {
-            const tecnologia = item.trim();
+        if (!tecnologias) {
+            contagem["Não informado"] = (contagem["Não informado"] || 0) + 1;
+            return;
+        }
 
-            if (tecnologia) {
+        String(tecnologias)
+            .split(",")
+            .map(item => item.trim())
+            .filter(item => item !== "")
+            .forEach(tecnologia => {
                 contagem[tecnologia] = (contagem[tecnologia] || 0) + 1;
-            }
-        });
+            });
     });
 
     return contagem;
@@ -50,18 +178,12 @@ function contarPorMes(registros) {
     const contagem = {};
 
     registros.forEach(registro => {
-        const ano = registro["Ano"] || "";
-        const mes = registro["Mês"] || "";
+        const periodo = obterMesAno(registro);
 
         let chave = "Não informado";
 
-        if (ano && mes) {
-            chave = `${mes}/${ano}`;
-        } else if (registro["Data"]) {
-            const partes = registro["Data"].split("-");
-            if (partes.length >= 2) {
-                chave = `${partes[1]}/${partes[0]}`;
-            }
+        if (periodo.mes && periodo.ano) {
+            chave = `${periodo.mes}/${periodo.ano}`;
         }
 
         contagem[chave] = (contagem[chave] || 0) + 1;
@@ -133,19 +255,35 @@ function preencherTabela(registros) {
     registros
         .slice()
         .reverse()
-        .slice(0, 30)
+        .slice(0, 50)
         .forEach(registro => {
+            const data = converterDataExcel(obterValor(registro, ["Data"]));
+            const canal = obterValor(registro, ["Canal"]);
+            const instituicao = obterValor(registro, ["Instituição", "Instituicao"]);
+            const nome = obterValor(registro, ["Nome"]);
+            const cargo = obterValor(registro, ["Cargo"]);
+            const tipo = obterValor(registro, ["Tipo de Atendimento"]);
+            const tecnologia = obterValor(registro, [
+                "Tecnologia Envolvida",
+                "Tecnologia envolvida",
+                "Tecnologia",
+                "Tecnologias",
+                "TecnologiaEnvolvida"
+            ]);
+            const duracao = obterValor(registro, ["Duração Formatada", "Duracao Formatada"]) ||
+                formatarDuracao(obterValor(registro, ["Duração em Minutos", "Duracao em Minutos"]));
+
             const linha = document.createElement("tr");
 
             linha.innerHTML = `
-                <td>${registro["Data"] || ""}</td>
-                <td>${registro["Canal"] || ""}</td>
-                <td>${registro["Instituição"] || ""}</td>
-                <td>${registro["Nome"] || ""}</td>
-                <td>${registro["Cargo"] || ""}</td>
-                <td>${registro["Tipo de Atendimento"] || ""}</td>
-                <td>${registro["Tecnologia Envolvida"] || ""}</td>
-                <td>${registro["Duração Formatada"] || ""}</td>
+                <td>${data}</td>
+                <td>${canal}</td>
+                <td>${instituicao}</td>
+                <td>${nome}</td>
+                <td>${cargo}</td>
+                <td>${tipo}</td>
+                <td>${tecnologia || "Não informado"}</td>
+                <td>${duracao}</td>
             `;
 
             tabela.appendChild(linha);
@@ -170,39 +308,128 @@ async function buscarRegistrosDaPlanilha() {
     return JSON.parse(texto);
 }
 
+function preencherFiltroAno(registros) {
+    const selectAno = document.getElementById("filtroAno");
+
+    if (!selectAno) {
+        return;
+    }
+
+    const anoAtualSelecionado = selectAno.value;
+
+    const anos = new Set();
+
+    registros.forEach(registro => {
+        const periodo = obterMesAno(registro);
+
+        if (periodo.ano) {
+            anos.add(periodo.ano);
+        }
+    });
+
+    selectAno.innerHTML = `<option value="">Todos os anos</option>`;
+
+    Array.from(anos)
+        .sort()
+        .forEach(ano => {
+            const option = document.createElement("option");
+            option.value = ano;
+            option.textContent = ano;
+            selectAno.appendChild(option);
+        });
+
+    if (anoAtualSelecionado) {
+        selectAno.value = anoAtualSelecionado;
+    }
+}
+
+function aplicarFiltros(registros) {
+    const filtroMes = document.getElementById("filtroMes")?.value || "";
+    const filtroAno = document.getElementById("filtroAno")?.value || "";
+
+    return registros.filter(registro => {
+        const periodo = obterMesAno(registro);
+
+        const passaMes = !filtroMes || periodo.mes === filtroMes;
+        const passaAno = !filtroAno || periodo.ano === filtroAno;
+
+        return passaMes && passaAno;
+    });
+}
+
+function atualizarComponentes(registros) {
+    limparGraficos();
+
+    const totalAtendimentos = registros.length;
+
+    const totalMinutos = registros.reduce((soma, item) => {
+        return soma + Number(obterValor(item, ["Duração em Minutos", "Duracao em Minutos"]) || 0);
+    }, 0);
+
+    const contagemCanal = contarPorCampo(registros, ["Canal"]);
+    const canalMaisUsado = obterMaiorCategoria(contagemCanal);
+
+    document.getElementById("totalAtendimentos").textContent = totalAtendimentos;
+    document.getElementById("totalHoras").textContent = formatarDuracao(totalMinutos);
+    document.getElementById("principalCanal").textContent = canalMaisUsado;
+
+    criarGrafico("graficoCanal", "bar", "Atendimentos por canal", contagemCanal);
+
+    criarGrafico(
+        "graficoCargo",
+        "bar",
+        "Atendimentos por cargo",
+        contarPorCampo(registros, ["Cargo"])
+    );
+
+    criarGrafico(
+        "graficoSegmento",
+        "doughnut",
+        "Atendimentos por segmento",
+        contarPorCampo(registros, ["Segmento"])
+    );
+
+    criarGrafico(
+        "graficoTipo",
+        "bar",
+        "Atendimentos por tipo",
+        contarPorCampo(registros, ["Tipo de Atendimento"])
+    );
+
+    criarGrafico(
+        "graficoTecnologia",
+        "bar",
+        "Atendimentos por tecnologia",
+        contarTecnologias(registros)
+    );
+
+    criarGrafico(
+        "graficoMes",
+        "line",
+        "Atendimentos por mês",
+        contarPorMes(registros)
+    );
+
+    preencherTabela(registros);
+}
+
 async function carregarDashboard() {
     const status = document.getElementById("statusDashboard");
 
     try {
         status.textContent = "Buscando dados da planilha...";
 
-        limparGraficos();
+        registrosOriginais = await buscarRegistrosDaPlanilha();
 
-        const registros = await buscarRegistrosDaPlanilha();
+        console.log("Registros recebidos da planilha:", registrosOriginais);
 
-        const totalAtendimentos = registros.length;
+        preencherFiltroAno(registrosOriginais);
 
-        const totalMinutos = registros.reduce((soma, item) => {
-            return soma + Number(item["Duração em Minutos"] || 0);
-        }, 0);
+        const registrosFiltrados = aplicarFiltros(registrosOriginais);
 
-        const contagemCanal = contarPorCampo(registros, "Canal");
-        const canalMaisUsado = obterMaiorCategoria(contagemCanal);
+        atualizarComponentes(registrosFiltrados);
 
-        document.getElementById("totalAtendimentos").textContent = totalAtendimentos;
-        document.getElementById("totalHoras").textContent = formatarDuracao(totalMinutos);
-        document.getElementById("principalCanal").textContent = canalMaisUsado;
-
-        criarGrafico("graficoCanal", "bar", "Atendimentos por canal", contagemCanal);
-        criarGrafico("graficoCargo", "bar", "Atendimentos por cargo", contarPorCampo(registros, "Cargo"));
-        criarGrafico("graficoSegmento", "doughnut", "Atendimentos por segmento", contarPorCampo(registros, "Segmento"));
-        criarGrafico("graficoTipo", "bar", "Atendimentos por tipo", contarPorCampo(registros, "Tipo de Atendimento"));
-        criarGrafico("graficoTecnologia", "bar", "Atendimentos por tecnologia", contarTecnologias(registros, "Tecnologia Envolvida"));
-        criarGrafico("graficoMes", "line", "Atendimentos por mês", contarPorMes(registros));
-
-        preencherTabela(registros);
-
-        status.textContent = `Dashboard atualizado com ${totalAtendimentos} atendimento(s).`;
+        status.textContent = `Dashboard atualizado com ${registrosFiltrados.length} atendimento(s).`;
 
     } catch (erro) {
         console.error(erro);
@@ -210,12 +437,32 @@ async function carregarDashboard() {
     }
 }
 
+function atualizarPorFiltro() {
+    const status = document.getElementById("statusDashboard");
+
+    const registrosFiltrados = aplicarFiltros(registrosOriginais);
+
+    atualizarComponentes(registrosFiltrados);
+
+    status.textContent = `Dashboard filtrado com ${registrosFiltrados.length} atendimento(s).`;
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     carregarDashboard();
 
     const botaoAtualizar = document.getElementById("atualizarDashboard");
+    const filtroMes = document.getElementById("filtroMes");
+    const filtroAno = document.getElementById("filtroAno");
 
     if (botaoAtualizar) {
         botaoAtualizar.addEventListener("click", carregarDashboard);
+    }
+
+    if (filtroMes) {
+        filtroMes.addEventListener("change", atualizarPorFiltro);
+    }
+
+    if (filtroAno) {
+        filtroAno.addEventListener("change", atualizarPorFiltro);
     }
 });

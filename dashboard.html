@@ -26,7 +26,40 @@
         <section class="card">
             <h2>Visão geral</h2>
             <p>Este dashboard busca os dados diretamente da tabela <strong>CTP_Control</strong> no Excel Online.</p>
-            <button class="button secondary" id="atualizarDashboard">Atualizar dashboard</button>
+
+            <div class="grid grid-3" style="margin-top: 18px;">
+                <div class="form-group">
+                    <label for="filtroMes">Filtrar por mês</label>
+                    <select id="filtroMes">
+                        <option value="">Todos os meses</option>
+                        <option value="01">Janeiro</option>
+                        <option value="02">Fevereiro</option>
+                        <option value="03">Março</option>
+                        <option value="04">Abril</option>
+                        <option value="05">Maio</option>
+                        <option value="06">Junho</option>
+                        <option value="07">Julho</option>
+                        <option value="08">Agosto</option>
+                        <option value="09">Setembro</option>
+                        <option value="10">Outubro</option>
+                        <option value="11">Novembro</option>
+                        <option value="12">Dezembro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="filtroAno">Filtrar por ano</label>
+                    <select id="filtroAno">
+                        <option value="">Todos os anos</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button class="button secondary" id="atualizarDashboard">Atualizar dashboard</button>
+                </div>
+            </div>
+
             <p id="statusDashboard" style="margin-top: 12px;">Carregando dados...</p>
         </section>
 
