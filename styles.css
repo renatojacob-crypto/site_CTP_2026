@@ -281,3 +281,96 @@ canvas {
     color: var(--text-muted);
     font-weight: bold;
 }
+/* ===== BACKGROUNDS DAS PÁGINAS ===== */
+
+body {
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(248, 250, 252, 0.86);
+    z-index: -1;
+}
+
+.page-home {
+    background-image: url("assets/imagens/fundo.png");
+}
+
+.page-formulario {
+    background-image: url("assets/imagens/fundo.png");
+}
+
+.page-dashboard {
+    background-image: url("assets/imagens/fundo.png");
+}
+
+.page-relatorios {
+    background-image: url("assets/imagens/fundo.png");
+}
+
+/* ===== CABEÇALHO COM BANNER ===== */
+
+.site-header {
+    background-image:
+        linear-gradient(135deg, rgba(249, 115, 22, 0.88), rgba(37, 99, 235, 0.88)),
+        url("assets/imagens/banner.png");
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 0;
+}
+
+.header-overlay {
+    padding: 28px 20px;
+    backdrop-filter: blur(1px);
+}
+
+.brand-area {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.logo-header {
+    width: 86px;
+    height: 86px;
+    object-fit: contain;
+    background: white;
+    border-radius: 18px;
+    padding: 10px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+}
+
+.site-header h1 {
+    margin-bottom: 6px;
+}
+
+.site-header p {
+    max-width: 850px;
+}
+
+/* Deixa os cards mais legíveis sobre o background */
+.card,
+.stat {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(4px);
+}
+
+/* Responsivo */
+@media (max-width: 800px) {
+    .brand-area {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logo-header {
+        width: 72px;
+        height: 72px;
+    }
+}
