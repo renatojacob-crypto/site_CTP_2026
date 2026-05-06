@@ -294,7 +294,7 @@ body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(248, 250, 252, 0.94);
+    background: rgba(248, 250, 252, 0.50);
     z-index: -1;
 }
 
@@ -327,9 +327,9 @@ body::before {
 }
 
 .header-overlay {
-    background: rgba(255, 255, 255, 0.78);
+    background: rgba(255, 255, 255, 0.05);
     padding: 28px 20px;
-    backdrop-filter: blur(2px);
+    backdrop-filter: none;
 }
 
 .brand-area {
@@ -403,12 +403,12 @@ body::before {
 }
 
 .footer-overlay {
-    background: rgba(255, 255, 255, 0.78);
+    background: rgba(255, 255, 255, 0.05);
     min-height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(2px);
+    backdrop-filter: none;
     padding: 30px 20px;
 }
 
