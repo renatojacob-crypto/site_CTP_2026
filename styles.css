@@ -479,3 +479,13 @@ canvas {
         max-height: 260px;
     }
 }
+/* ===== CARDS DA PÁGINA INICIAL ===== */
+
+.cards-home {
+    max-width: 990px;
+    margin: 0 auto;
+}
+
+.cards-home .card {
+    min-height: 150px;
+}
