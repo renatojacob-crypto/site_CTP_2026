@@ -23,6 +23,7 @@
                     <a href="index.html">Início</a>
                     <a href="formulario.html">Novo atendimento</a>
                     <a href="dashboard.html">Dashboard</a>
+                    <a href="indicadores.html">Indicadores</a>
                     <a href="relatorio-mensal.html">Relatório mensal</a>
                     <a href="relatorios.html">Relatórios</a>
                 </nav>
@@ -169,6 +170,18 @@
                 <div class="form-group">
                     <label for="descricaoSolucao">Descrição da solução</label>
                     <textarea id="descricaoSolucao" name="descricaoSolucao" placeholder="Descreva a orientação, solução ou encaminhamento realizado." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="statusAtendimento">Status do atendimento</label>
+                    <select id="statusAtendimento" name="statusAtendimento" required>
+                        <option value="">Selecione</option>
+                        <option value="Resolvido" selected>Resolvido</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Encaminhado">Encaminhado</option>
+                        <option value="Em acompanhamento">Em acompanhamento</option>
+                        <option value="Aberto">Aberto</option>
+                    </select>
                 </div>
 
                 <button class="button success" type="submit">Salvar atendimento</button>

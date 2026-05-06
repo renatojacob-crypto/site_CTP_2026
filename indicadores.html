@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indicadores Executivos - CTP</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-dashboard">
+
+    <header class="site-header">
+        <div class="header-overlay">
+            <div class="header-content">
+                <div class="brand-area">
+                    <img src="assets/imagens/logo.png" alt="Logo CTP" class="logo-header">
+
+                    <div>
+                        <h1>Indicadores Executivos - CTP</h1>
+                        <p>Visão rápida dos principais indicadores da Central Técnico-Pedagógica.</p>
+                    </div>
+                </div>
+
+                <nav>
+                    <a href="index.html">Início</a>
+                    <a href="formulario.html">Novo atendimento</a>
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="indicadores.html">Indicadores</a>
+                    <a href="relatorio-mensal.html">Relatório mensal</a>
+                    <a href="relatorios.html">Relatórios</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="card">
+            <h2>Painel de indicadores executivos</h2>
+            <p>
+                Este painel apresenta uma visão resumida dos atendimentos registrados na planilha oficial.
+                Use os filtros abaixo para analisar um mês específico.
+            </p>
+
+            <div class="grid grid-3" style="margin-top: 18px;">
+                <div class="form-group">
+                    <label for="filtroMesIndicadores">Mês</label>
+                    <select id="filtroMesIndicadores">
+                        <option value="">Todos os meses</option>
+                        <option value="01">Janeiro</option>
+                        <option value="02">Fevereiro</option>
+                        <option value="03">Março</option>
+                        <option value="04">Abril</option>
+                        <option value="05">Maio</option>
+                        <option value="06">Junho</option>
+                        <option value="07">Julho</option>
+                        <option value="08">Agosto</option>
+                        <option value="09">Setembro</option>
+                        <option value="10">Outubro</option>
+                        <option value="11">Novembro</option>
+                        <option value="12">Dezembro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="filtroAnoIndicadores">Ano</label>
+                    <select id="filtroAnoIndicadores">
+                        <option value="">Todos os anos</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button class="button secondary" id="atualizarIndicadores">Atualizar indicadores</button>
+                </div>
+            </div>
+
+            <p id="statusIndicadores" style="margin-top: 12px;">Carregando dados da planilha...</p>
+        </section>
+
+        <section class="grid grid-4 indicadores-executivos">
+            <div class="card indicador-card">
+                <span>Atendimentos no período</span>
+                <strong id="indTotalAtendimentos">0</strong>
+                <small>Total de registros filtrados</small>
+            </div>
+
+            <div class="card indicador-card">
+                <span>Horas no período</span>
+                <strong id="indTotalHoras">0h</strong>
+                <small>Soma da duração dos atendimentos</small>
+            </div>
+
+            <div class="card indicador-card">
+                <span>Média de duração</span>
+                <strong id="indMediaDuracao">0min</strong>
+                <small>Tempo médio por atendimento</small>
+            </div>
+
+            <div class="card indicador-card">
+                <span>Canal mais usado</span>
+                <strong id="indCanalMaisUsado">-</strong>
+                <small>Canal com maior número de registros</small>
+            </div>
+
+            <div class="card indicador-card">
+                <span>Tecnologia mais atendida</span>
+                <strong id="indTecnologiaMaisAtendida">-</strong>
+                <small>Tecnologia mais recorrente nos atendimentos</small>
+            </div>
+
+            <div class="card indicador-card">
+                <span>Instituição com mais atendimentos</span>
+                <strong id="indInstituicaoMaisAtendida">-</strong>
+                <small>Instituição com maior volume registrado</small>
+            </div>
+
+            <div class="card indicador-card">
+                <span>Problema mais recorrente</span>
+                <strong id="indProblemaMaisRecorrente">-</strong>
+                <small>Baseado no tipo/categoria do atendimento</small>
+            </div>
+
+            <div class="card indicador-card">
+                <span>Atendimentos pendentes</span>
+                <strong id="indAtendimentosPendentes">-</strong>
+                <small>Depende do campo Status na planilha</small>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Resumo executivo automático</h2>
+            <p id="resumoExecutivo">
+                Selecione os filtros para gerar o resumo executivo.
+            </p>
+        </section>
+
+        <section class="card">
+            <h2>Top 5 tecnologias</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tecnologia</th>
+                            <th>Quantidade de atendimentos</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaTopTecnologias"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Top 5 instituições</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Instituição</th>
+                            <th>Quantidade de atendimentos</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaTopInstituicoes"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-overlay">
+            <p>CTP - Registro de Atendimentos</p>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="indicadores.js"></script>
+</body>
+</html>

@@ -489,3 +489,57 @@ canvas {
 .cards-home .card {
     min-height: 150px;
 }
+
+/* ===== INDICADORES EXECUTIVOS ===== */
+
+.grid-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.indicadores-executivos {
+    margin-bottom: 22px;
+}
+
+.indicador-card {
+    min-height: 185px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.indicador-card span {
+    color: var(--text-muted);
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.indicador-card strong {
+    display: block;
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    line-height: 1.2;
+    margin: 12px 0;
+    word-break: break-word;
+}
+
+.indicador-card small {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+#resumoExecutivo {
+    font-size: 1.05rem;
+    color: var(--text-main);
+}
+
+@media (max-width: 1000px) {
+    .grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+}

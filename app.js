@@ -119,7 +119,8 @@ function iniciarFormulario() {
             "Duração Formatada": formatarDuracao(duracaoMinutos),
             "Mês": dados.get("data") ? dados.get("data").substring(5, 7) : "",
             "Ano": dados.get("data") ? dados.get("data").substring(0, 4) : "",
-            "Criado Em": new Date().toISOString()
+            "Criado Em": new Date().toISOString(),
+            "Status": dados.get("statusAtendimento")
         };
 
         try {
