@@ -197,7 +197,7 @@ async function carregarDashboard() {
         criarGrafico("graficoCargo", "bar", "Atendimentos por cargo", contarPorCampo(registros, "Cargo"));
         criarGrafico("graficoSegmento", "doughnut", "Atendimentos por segmento", contarPorCampo(registros, "Segmento"));
         criarGrafico("graficoTipo", "bar", "Atendimentos por tipo", contarPorCampo(registros, "Tipo de Atendimento"));
-        criarGrafico("graficoTecnologia", "bar", "Atendimentos por tecnologia", contarTecnologias(registros));
+        criarGrafico("graficoTecnologia", "bar", "Atendimentos por tecnologia", contarTecnologias(registros, "Tecnologia Envolvida"));
         criarGrafico("graficoMes", "line", "Atendimentos por mês", contarPorMes(registros));
 
         preencherTabela(registros);
