@@ -397,3 +397,85 @@ canvas {
         font-size: 1.7rem;
     }
 }
+/* ===== RELATÓRIO MENSAL ===== */
+
+.relatorio-area {
+    background: white;
+}
+
+.relatorio-cabecalho {
+    text-align: center;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 18px;
+}
+
+.relatorio-cabecalho h2 {
+    font-size: 2rem;
+    color: var(--text-main);
+}
+
+.relatorio-cabecalho h3 {
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.relatorio-cabecalho p {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.relatorio-texto {
+    margin-bottom: 24px;
+    color: var(--text-main);
+    font-size: 1.05rem;
+}
+
+.relatorio-indicadores {
+    margin-bottom: 22px;
+}
+
+.relatorio-grafico {
+    box-shadow: none;
+    border: 1px solid var(--border-color);
+}
+
+@media print {
+    header,
+    footer,
+    .site-header,
+    .site-footer,
+    main > .card:first-child,
+    main > .card:nth-child(2) {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+    }
+
+    body::before {
+        display: none !important;
+    }
+
+    main {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .relatorio-area {
+        box-shadow: none;
+        border: none;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .card {
+        break-inside: avoid;
+    }
+
+    canvas {
+        max-height: 260px;
+    }
+}

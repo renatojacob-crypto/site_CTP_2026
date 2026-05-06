@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Mensal - CTP</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body class="page-relatorios">
+
+    <header class="site-header">
+        <div class="header-overlay">
+            <div class="header-content">
+                <div class="brand-area">
+                    <img src="assets/imagens/logo.png" alt="Logo CTP" class="logo-header">
+
+                    <div>
+                        <h1>Relatório Mensal - CTP</h1>
+                        <p>Geração de relatório mensal dos atendimentos da Central Técnico-Pedagógica.</p>
+                    </div>
+                </div>
+
+                <nav>
+                    <a href="index.html">Início</a>
+                    <a href="formulario.html">Novo atendimento</a>
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="relatorio-mensal.html">Relatório mensal</a>
+                    <a href="relatorios.html">Relatórios</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="card">
+            <h2>Gerar relatório mensal</h2>
+            <p>Selecione o mês e o ano para gerar um relatório com os dados da planilha oficial.</p>
+
+            <div class="grid grid-3" style="margin-top: 18px;">
+                <div class="form-group">
+                    <label for="filtroMesRelatorio">Mês</label>
+                    <select id="filtroMesRelatorio">
+                        <option value="">Selecione o mês</option>
+                        <option value="01">Janeiro</option>
+                        <option value="02">Fevereiro</option>
+                        <option value="03">Março</option>
+                        <option value="04">Abril</option>
+                        <option value="05">Maio</option>
+                        <option value="06">Junho</option>
+                        <option value="07">Julho</option>
+                        <option value="08">Agosto</option>
+                        <option value="09">Setembro</option>
+                        <option value="10">Outubro</option>
+                        <option value="11">Novembro</option>
+                        <option value="12">Dezembro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="filtroAnoRelatorio">Ano</label>
+                    <select id="filtroAnoRelatorio">
+                        <option value="">Selecione o ano</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button class="button secondary" id="gerarRelatorio">Gerar relatório</button>
+                </div>
+            </div>
+
+            <p id="statusRelatorio" style="margin-top: 12px;">Carregando dados da planilha...</p>
+        </section>
+
+        <section class="card">
+            <h2>Envio por e-mail</h2>
+            <p>Digite um ou mais e-mails separados por ponto e vírgula.</p>
+
+            <div class="form-group">
+                <label for="emailsRelatorio">Destinatários</label>
+                <input 
+                    type="text" 
+                    id="emailsRelatorio" 
+                    placeholder="email1@empresa.com; email2@empresa.com"
+                >
+            </div>
+
+            <button class="button success" id="enviarRelatorioEmail">Enviar relatório por e-mail</button>
+            <button class="button secondary" id="imprimirRelatorio">Imprimir / Salvar PDF</button>
+
+            <p id="statusEmail" style="margin-top: 12px;"></p>
+        </section>
+
+        <section id="relatorioConteudo" class="card relatorio-area">
+            <div class="relatorio-cabecalho">
+                <h2>Relatório Mensal de Atendimentos</h2>
+                <h3>Central Técnico-Pedagógica</h3>
+                <p id="periodoRelatorio">Período: não selecionado</p>
+            </div>
+
+            <p class="relatorio-texto">
+                Este relatório apresenta o resumo mensal dos atendimentos realizados pela Central Técnico-Pedagógica,
+                considerando os registros realizados no período selecionado. Os dados analisados incluem canais de atendimento,
+                cargos atendidos, segmentos, tecnologias envolvidas, tipos de atendimento e duração total dos atendimentos.
+            </p>
+
+            <section class="grid grid-3 relatorio-indicadores">
+                <div class="stat">
+                    <span>Total de atendimentos</span>
+                    <strong id="relTotalAtendimentos">0</strong>
+                </div>
+
+                <div class="stat">
+                    <span>Total de horas</span>
+                    <strong id="relTotalHoras">0h</strong>
+                </div>
+
+                <div class="stat">
+                    <span>Canal mais utilizado</span>
+                    <strong id="relCanalPrincipal">-</strong>
+                </div>
+            </section>
+
+            <section class="grid grid-2">
+                <div class="card relatorio-grafico">
+                    <h3>Atendimentos por canal</h3>
+                    <canvas id="relGraficoCanal"></canvas>
+                </div>
+
+                <div class="card relatorio-grafico">
+                    <h3>Atendimentos por cargo</h3>
+                    <canvas id="relGraficoCargo"></canvas>
+                </div>
+
+                <div class="card relatorio-grafico">
+                    <h3>Atendimentos por segmento</h3>
+                    <canvas id="relGraficoSegmento"></canvas>
+                </div>
+
+                <div class="card relatorio-grafico">
+                    <h3>Atendimentos por tecnologia</h3>
+                    <canvas id="relGraficoTecnologia"></canvas>
+                </div>
+
+                <div class="card relatorio-grafico">
+                    <h3>Atendimentos por tipo</h3>
+                    <canvas id="relGraficoTipo"></canvas>
+                </div>
+
+                <div class="card relatorio-grafico">
+                    <h3>Atendimentos por instituição</h3>
+                    <canvas id="relGraficoInstituicao"></canvas>
+                </div>
+            </section>
+
+            <section class="card">
+                <h3>Resumo dos últimos atendimentos do período</h3>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Canal</th>
+                                <th>Instituição</th>
+                                <th>Nome</th>
+                                <th>Cargo</th>
+                                <th>Tipo</th>
+                                <th>Tecnologia</th>
+                                <th>Duração</th>
+                            </tr>
+                        </thead>
+                        <tbody id="relTabelaAtendimentos"></tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-overlay">
+            <p>CTP - Registro de Atendimentos</p>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="relatorio.js"></script>
+</body>
+</html>
