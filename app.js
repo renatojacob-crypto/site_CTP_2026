@@ -128,6 +128,7 @@ function iniciarFormulario() {
             if (resultado.modo === "local") {
                 mostrarMensagem("Atendimento salvo em modo de teste neste navegador.", "success");
             } else {
+                salvarRegistroLocal(registro);
                 mostrarMensagem("Atendimento enviado com sucesso para a planilha.", "success");
             }
 

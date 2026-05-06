@@ -250,3 +250,34 @@ footer {
         font-size: 1.7rem;
     }
 }
+canvas {
+    width: 100% !important;
+    max-height: 320px;
+}
+
+.stat span {
+    color: var(--text-muted);
+    font-weight: bold;
+}
+
+.stat strong {
+    color: var(--primary-color);
+}
+canvas {
+    width: 100% !important;
+    max-height: 320px;
+}
+
+.stat span {
+    color: var(--text-muted);
+    font-weight: bold;
+}
+
+.stat strong {
+    color: var(--primary-color);
+}
+
+#statusDashboard {
+    color: var(--text-muted);
+    font-weight: bold;
+}
