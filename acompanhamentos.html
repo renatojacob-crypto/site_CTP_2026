@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acompanhamentos Pendentes - CTP 360</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="acompanhamentos.css">
+</head>
+<body class="page-dashboard page-acompanhamentos">
+    <header class="site-header">
+        <div class="header-overlay">
+            <div class="header-content">
+                <div class="brand-area">
+                    <img src="assets/imagens/logo.png" alt="Logo CTP" class="logo-header">
+                    <div>
+                        <h1>CTP 360 - Acompanhamentos Pendentes</h1>
+                        <p>Controle dos atendimentos que exigem retorno, acompanhamento ou nova ação da equipe.</p>
+                    </div>
+                </div>
+                <nav>
+                    <a href="index.html">Início</a>
+                    <a href="formulario.html">Novo atendimento</a>
+                    <a href="atendimentos.html">Gerenciar atendimentos</a>
+                    <a href="acompanhamentos.html" aria-current="page">Acompanhamentos</a>
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="indicadores.html">Indicadores</a>
+                    <a href="relatorio-mensal.html">Relatório mensal</a>
+                    <a href="relatorios.html">Relatórios</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="card">
+            <div class="titulo-com-acoes">
+                <div>
+                    <h2>Painel de acompanhamento</h2>
+                    <p>Esta página mostra atendimentos marcados com <strong>NecessitaAcompanhamento = Sim</strong>.</p>
+                </div>
+                <button id="btnAtualizarAcompanhamentos" class="button secondary button-sem-margem" type="button">
+                    Atualizar painel
+                </button>
+            </div>
+            <p id="statusAcompanhamentos" class="status-inline">Carregando acompanhamentos...</p>
+        </section>
+
+        <section class="grid grid-4 resumo-acompanhamentos">
+            <div class="stat">
+                <span>Pendentes</span>
+                <strong id="statPendentes">0</strong>
+                <small>Total aguardando acompanhamento</small>
+            </div>
+            <div class="stat stat-atrasados">
+                <span>Atrasados</span>
+                <strong id="statAtrasados">0</strong>
+                <small>Data prevista já vencida</small>
+            </div>
+            <div class="stat">
+                <span>Para hoje</span>
+                <strong id="statHoje">0</strong>
+                <small>Acompanhamentos previstos para hoje</small>
+            </div>
+            <div class="stat">
+                <span>Sem data</span>
+                <strong id="statSemData">0</strong>
+                <small>Pendentes sem próxima data definida</small>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Filtros</h2>
+            <div class="grid grid-filtros-acompanhamento" style="margin-top: 18px;">
+                <div class="form-group filtro-busca">
+                    <label for="filtroBuscaAcompanhamento">Pesquisar</label>
+                    <input id="filtroBuscaAcompanhamento" type="search"
+                           placeholder="Número, instituição, contato, observação..." autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="filtroSituacaoAcompanhamento">Situação</label>
+                    <select id="filtroSituacaoAcompanhamento">
+                        <option value="">Todas</option>
+                        <option value="atrasado">Atrasados</option>
+                        <option value="hoje">Para hoje</option>
+                        <option value="proximo">Próximos</option>
+                        <option value="sem-data">Sem data</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filtroPrioridadeAcompanhamento">Prioridade</label>
+                    <select id="filtroPrioridadeAcompanhamento">
+                        <option value="">Todas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button id="btnLimparFiltrosAcompanhamento" class="button secondary button-sem-margem" type="button">
+                        Limpar filtros
+                    </button>
+                </div>
+            </div>
+            <p id="contadorAcompanhamentos" class="contador-filtrado"></p>
+        </section>
+
+        <section class="card">
+            <h2>Atendimentos que exigem acompanhamento</h2>
+            <div class="table-wrapper">
+                <table class="tabela-acompanhamentos">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Instituição</th>
+                            <th>Contato</th>
+                            <th>Status</th>
+                            <th>Prioridade</th>
+                            <th>Próximo acompanhamento</th>
+                            <th>Situação</th>
+                            <th>Observações internas</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaAcompanhamentos">
+                        <tr><td colspan="9">Carregando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-overlay">
+            <p>CTP 360 - Central Técnico-Pedagógica</p>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="acompanhamentos.js"></script>
+</body>
+</html>

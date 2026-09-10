@@ -3,86 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Novo Atendimento - CTP</title>
+    <title>Novo Atendimento - CTP 360</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="page-formulario">
+
     <header class="site-header">
         <div class="header-overlay">
             <div class="header-content">
+
                 <div class="brand-area">
-                    <img src="assets/imagens/logo.png" alt="Logo CTP" class="logo-header">
+                    <img
+                        src="assets/imagens/logo.png"
+                        alt="Logo CTP"
+                        class="logo-header"
+                    >
 
                     <div>
                         <h1>CTP - Registro de Atendimentos</h1>
-                        <p>Sistema para registrar, acompanhar e gerar relatórios de atendimentos técnico-pedagógicos.</p>
+                        <p>
+                            Sistema para registrar, acompanhar e gerar relatórios
+                            de atendimentos técnico-pedagógicos.
+                        </p>
                     </div>
                 </div>
 
                 <nav>
                     <a href="index.html">Início</a>
-                    <a href="formulario.html">Novo atendimento</a>
+                    <a href="formulario.html" aria-current="page">Novo atendimento</a>
+                    <a href="atendimentos.html">Gerenciar atendimentos</a>
+                    <a href="acompanhamentos.html">Acompanhamentos</a>
                     <a href="dashboard.html">Dashboard</a>
                     <a href="indicadores.html">Indicadores</a>
                     <a href="relatorio-mensal.html">Relatório mensal</a>
                     <a href="relatorios.html">Relatórios</a>
                 </nav>
+
             </div>
         </div>
     </header>
 
     <main>
+
         <section class="card">
-            <h2>Novo atendimento</h2>
-            <p>Preencha os campos abaixo para registrar um atendimento.</p>
+            <h2>Iniciar novo atendimento</h2>
+
+            <p>
+                Cadastre as informações conhecidas no início do atendimento.
+                O horário final e a descrição da solução poderão ser preenchidos
+                posteriormente, quando o atendimento for finalizado.
+            </p>
+
+            <p>
+                <strong>Status inicial:</strong> Aberto.
+            </p>
         </section>
 
-        <div id="mensagem" class="status-message"></div>
+        <div
+            id="mensagem"
+            class="status-message"
+            role="status"
+            aria-live="polite"
+        ></div>
 
         <section class="card">
+
             <form id="formAtendimento">
+
                 <div class="grid grid-2">
+
+                    <div class="form-group">
+                        <label for="assunto">Assunto</label>
+                        <input
+                            type="text"
+                            id="assunto"
+                            name="assunto"
+                            value="Atendimento técnico-pedagógico"
+                            placeholder="Resumo do assunto do atendimento"
+                            required
+                        >
+                        <small>
+                            Este valor será gravado no campo Assunto (Título)
+                            do SharePoint. Ele é independente do Número do Atendimento.
+                        </small>
+                    </div>
+
                     <div class="form-group">
                         <label for="data">Data</label>
-                        <input type="date" id="data" name="data" required>
+                        <input
+                            type="date"
+                            id="data"
+                            name="data"
+                            required
+                        >
                     </div>
 
                     <div class="form-group">
                         <label for="canal">Canal</label>
-                        <select id="canal" name="canal" required>
+                        <select
+                            id="canal"
+                            name="canal"
+                            required
+                        >
                             <option value="">Selecione</option>
                             <option value="WhatsApp">WhatsApp</option>
                             <option value="E-mail">E-mail</option>
                             <option value="Teams">Teams</option>
-                            <option value="Calendly">Calendly</option>
+                            <option value="Bookings">Bookings</option>
                             <option value="Presencial">Presencial</option>
                             <option value="Outro">Outro</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="horarioInicial">Horário inicial do atendimento</label>
-                        <input type="time" id="horarioInicial" name="horarioInicial" required>
+                        <label for="horarioInicial">
+                            Horário inicial do atendimento
+                        </label>
+                        <input
+                            type="time"
+                            id="horarioInicial"
+                            name="horarioInicial"
+                            required
+                        >
                     </div>
 
                     <div class="form-group">
-                        <label for="horarioFinal">Horário final do atendimento</label>
-                        <input type="time" id="horarioFinal" name="horarioFinal" required>
+                        <label for="horarioFinal">
+                            Horário final do atendimento
+                            <span>(opcional)</span>
+                        </label>
+                        <input
+                            type="time"
+                            id="horarioFinal"
+                            name="horarioFinal"
+                        >
+                        <small>
+                            Deixe vazio enquanto o atendimento estiver em andamento.
+                        </small>
                     </div>
 
                     <div class="form-group">
                         <label for="instituicao">Instituição</label>
-                        <input type="text" id="instituicao" name="instituicao" placeholder="Ex.: Escola Municipal..." required>
+                        <input
+                            type="text"
+                            id="instituicao"
+                            name="instituicao"
+                            placeholder="Digite exatamente como consta no cadastro"
+                            autocomplete="off"
+                            required
+                        >
                     </div>
 
                     <div class="form-group">
                         <label for="nome">Nome do atendido</label>
-                        <input type="text" id="nome" name="nome" placeholder="Nome da pessoa atendida" required>
+                        <input
+                            type="text"
+                            id="nome"
+                            name="nome"
+                            placeholder="Digite exatamente como consta no cadastro"
+                            autocomplete="off"
+                            required
+                        >
                     </div>
 
                     <div class="form-group">
                         <label for="cargo">Cargo</label>
-                        <select id="cargo" name="cargo" required>
+                        <select
+                            id="cargo"
+                            name="cargo"
+                            required
+                        >
                             <option value="">Selecione</option>
                             <option value="Professor(a)">Professor(a)</option>
                             <option value="Coordenador(a)">Coordenador(a)</option>
@@ -96,7 +187,11 @@
 
                     <div class="form-group">
                         <label for="tipoAtendimento">Tipo de atendimento</label>
-                        <select id="tipoAtendimento" name="tipoAtendimento" required>
+                        <select
+                            id="tipoAtendimento"
+                            name="tipoAtendimento"
+                            required
+                        >
                             <option value="">Selecione</option>
                             <option value="Dúvida pedagógica">Dúvida pedagógica</option>
                             <option value="Dúvida técnica">Dúvida técnica</option>
@@ -110,7 +205,13 @@
 
                     <div class="form-group">
                         <label for="segmento">Segmento</label>
-                        <select id="segmento" name="segmento" multiple required size="6">
+                        <select
+                            id="segmento"
+                            name="segmento"
+                            multiple
+                            required
+                            size="6"
+                        >
                             <option value="Educação Infantil">Educação Infantil</option>
                             <option value="Ensino Fundamental Anos Iniciais">Ensino Fundamental Anos Iniciais</option>
                             <option value="Ensino Fundamental Anos Finais">Ensino Fundamental Anos Finais</option>
@@ -118,12 +219,19 @@
                             <option value="Ensino Técnico">Ensino Técnico</option>
                             <option value="Outro">Outro</option>
                         </select>
-                        <small>Segure Ctrl para selecionar mais de uma opção. No Mac, segure Command.</small>
+                        <small>
+                            Segure Ctrl para selecionar mais de uma opção.
+                            No Mac, segure Command.
+                        </small>
                     </div>
 
                     <div class="form-group">
                         <label for="programa">Programa</label>
-                        <select id="programa" name="programa" required>
+                        <select
+                            id="programa"
+                            name="programa"
+                            required
+                        >
                             <option value="">Selecione</option>
                             <option value="Jornada Z">Jornada Z</option>
                             <option value="Eng. Pensamento Computacional">Eng. Pensamento Computacional</option>
@@ -133,11 +241,18 @@
                             <option value="AppdEV">AppDEV</option>
                             <option value="Arduino">Arduino</option>
                             <option value="Outro">Outro</option>
-                        </select>                    </div>
+                        </select>
+                    </div>
 
                     <div class="form-group">
                         <label for="tecnologia">Tecnologia envolvida</label>
-                        <select id="tecnologia" name="tecnologia" multiple required size="7">
+                        <select
+                            id="tecnologia"
+                            name="tecnologia"
+                            multiple
+                            required
+                            size="7"
+                        >
                             <option value="Micro:bit">Micro:bit</option>
                             <option value="LEGO EV3">LEGO EV3</option>
                             <option value="LEGO SPIKE">LEGO SPIKE</option>
@@ -153,40 +268,59 @@
                             <option value="TechToc">TechToc</option>
                             <option value="Outro">Outro</option>
                         </select>
-                        <small>Segure Ctrl para selecionar mais de uma opção. No Mac, segure Command.</small>
+                        <small>
+                            Segure Ctrl para selecionar mais de uma opção.
+                            No Mac, segure Command.
+                        </small>
                     </div>
 
                     <div class="form-group">
                         <label for="aulaAtividade">Aula ou atividade</label>
-                        <input type="text" id="aulaAtividade" name="aulaAtividade" placeholder="Ex.: JOZ3-ENC01-Pra lá e pra cá">
+                        <input
+                            type="text"
+                            id="aulaAtividade"
+                            name="aulaAtividade"
+                            placeholder="Ex.: JOZ3-ENC01-Pra lá e pra cá"
+                        >
                     </div>
+
                 </div>
 
                 <div class="form-group">
-                    <label for="descricaoProblema">Descrição do problema</label>
-                    <textarea id="descricaoProblema" name="descricaoProblema" placeholder="Descreva o problema, dúvida ou dificuldade apresentada no atendimento." required></textarea>
+                    <label for="descricaoProblema">
+                        Descrição do problema
+                    </label>
+                    <textarea
+                        id="descricaoProblema"
+                        name="descricaoProblema"
+                        placeholder="Descreva o problema, dúvida ou dificuldade apresentada no atendimento."
+                        required
+                    ></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="descricaoSolucao">Descrição da solução</label>
-                    <textarea id="descricaoSolucao" name="descricaoSolucao" placeholder="Descreva a orientação, solução ou encaminhamento realizado." required></textarea>
+                    <label for="descricaoSolucao">
+                        Descrição da solução
+                        <span>(opcional)</span>
+                    </label>
+                    <textarea
+                        id="descricaoSolucao"
+                        name="descricaoSolucao"
+                        placeholder="Pode ser preenchida posteriormente, quando houver uma solução ou orientação final."
+                    ></textarea>
                 </div>
 
-                <div class="form-group">
-                    <label for="statusAtendimento">Status do atendimento</label>
-                    <select id="statusAtendimento" name="statusAtendimento" required>
-                        <option value="">Selecione</option>
-                        <option value="Resolvido" selected>Resolvido</option>
-                        <option value="Pendente">Pendente</option>
-                        <option value="Encaminhado">Encaminhado</option>
-                        <option value="Em acompanhamento">Em acompanhamento</option>
-                        <option value="Aberto">Aberto</option>
-                    </select>
-                </div>
+                <button
+                    class="button success"
+                    type="submit"
+                >
+                    Iniciar atendimento
+                </button>
 
-                <button class="button success" type="submit">Salvar atendimento</button>
             </form>
+
         </section>
+
     </main>
 
     <footer class="site-footer">
@@ -197,5 +331,6 @@
 
     <script src="config.js"></script>
     <script src="app.js"></script>
+
 </body>
 </html>

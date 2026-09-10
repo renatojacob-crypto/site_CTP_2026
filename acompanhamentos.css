@@ -1,0 +1,131 @@
+/* CTP 360 - Acompanhamentos Pendentes */
+
+.page-acompanhamentos .status-inline {
+    margin-top: 14px;
+    font-weight: bold;
+    color: var(--text-muted);
+}
+
+.page-acompanhamentos .status-inline.sucesso { color: #166534; }
+.page-acompanhamentos .status-inline.erro { color: #991b1b; }
+.page-acompanhamentos .status-inline.carregando { color: var(--secondary-color); }
+
+.titulo-com-acoes {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.button-sem-margem { margin-top: 0; }
+
+.resumo-acompanhamentos { margin-bottom: 22px; }
+.resumo-acompanhamentos .stat { min-height: 150px; }
+.stat-atrasados strong { color: var(--danger-color); }
+
+.grid-filtros-acompanhamento {
+    grid-template-columns: 2fr 1fr 1fr auto;
+    align-items: end;
+}
+
+.contador-filtrado {
+    margin-top: 14px;
+    color: var(--text-muted);
+    font-weight: bold;
+}
+
+.tabela-acompanhamentos {
+    width: 100%;
+    min-width: 1050px;
+}
+
+.tabela-acompanhamentos tbody tr:hover {
+    background: rgba(241, 245, 249, 0.7);
+}
+
+.linha-atrasada td {
+    background: rgba(254, 226, 226, 0.45);
+}
+
+.celula-acoes { white-space: nowrap; }
+
+.button-pequeno {
+    padding: 8px 12px;
+    border-radius: 9px;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.badge-acompanhamento {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.badge-atrasado { background: #fee2e2; color: #991b1b; }
+.badge-hoje { background: #ffedd5; color: #9a3412; }
+.badge-proximo { background: #dbeafe; color: #1d4ed8; }
+.badge-sem-data { background: #f1f5f9; color: #475569; }
+
+/* Coluna Ações fixa */
+.tabela-acompanhamentos th:last-child,
+.tabela-acompanhamentos td:last-child {
+    position: sticky;
+    right: 0;
+    z-index: 3;
+    background: #ffffff;
+    min-width: 90px;
+    text-align: center;
+    box-shadow: -6px 0 10px rgba(15, 23, 42, 0.08);
+}
+
+.tabela-acompanhamentos thead th:last-child {
+    z-index: 5;
+    background: #f8fafc;
+}
+
+.tabela-acompanhamentos tbody tr:hover td:last-child {
+    background: #f8fafc;
+}
+
+.linha-atrasada td:last-child {
+    background: #fff7f7;
+}
+
+@media (max-width: 1000px) {
+    .grid-filtros-acompanhamento {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .filtro-busca {
+        grid-column: 1 / -1;
+    }
+
+    .titulo-com-acoes {
+        flex-direction: column;
+    }
+
+    .tabela-acompanhamentos th:nth-child(3),
+    .tabela-acompanhamentos td:nth-child(3),
+    .tabela-acompanhamentos th:nth-child(8),
+    .tabela-acompanhamentos td:nth-child(8) {
+        display: none;
+    }
+
+    .tabela-acompanhamentos {
+        min-width: 780px;
+    }
+}
+
+@media (max-width: 650px) {
+    .grid-filtros-acompanhamento {
+        grid-template-columns: 1fr;
+    }
+
+    .filtro-busca {
+        grid-column: auto;
+    }
+}

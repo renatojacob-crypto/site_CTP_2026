@@ -1,214 +1,577 @@
-// FUNÇÕES GERAIS DO SITE CTP
-
-function gerarId() {
-    return "CTP-" + Date.now();
-}
+// ============================================================
+// CTP 360 - NOVO ATENDIMENTO
+// Integração com Power Automate + SharePoint (CTP_Atendimentos)
+// Versão: permite iniciar atendimento sem horário final/solução
+// ============================================================
 
 function calcularDuracaoMinutos(inicio, fim) {
-    if (!inicio || !fim) return 0;
+    // Se ainda não houver horário final, o atendimento está em andamento.
+    if (!inicio || !fim) {
+        return null;
+    }
 
-    const [horaInicio, minutoInicio] = inicio.split(":").map(Number);
-    const [horaFim, minutoFim] = fim.split(":").map(Number);
+    const [horaInicio, minutoInicio] = inicio
+        .split(":")
+        .map(Number);
 
-    const totalInicio = horaInicio * 60 + minutoInicio;
-    const totalFim = horaFim * 60 + minutoFim;
+    const [horaFim, minutoFim] = fim
+        .split(":")
+        .map(Number);
 
-    if (totalFim < totalInicio) {
-        return 0;
+    const totalInicio =
+        horaInicio * 60 + minutoInicio;
+
+    const totalFim =
+        horaFim * 60 + minutoFim;
+
+    // Retorna -1 para indicar horário inválido.
+    if (totalFim <= totalInicio) {
+        return -1;
     }
 
     return totalFim - totalInicio;
 }
 
-function formatarDuracao(minutos) {
-    const horas = Math.floor(minutos / 60);
-    const mins = minutos % 60;
 
-    if (horas === 0) {
-        return `${mins}min`;
+// ============================================================
+// MENSAGENS NA TELA
+// ============================================================
+
+function mostrarMensagem(texto, tipo = "") {
+    const mensagem =
+        document.getElementById("mensagem");
+
+    if (!mensagem) {
+        return;
     }
-
-    return `${horas}h ${mins}min`;
-}
-
-function mostrarMensagem(texto, tipo) {
-    const mensagem = document.getElementById("mensagem");
-    if (!mensagem) return;
 
     mensagem.textContent = texto;
-    mensagem.className = `status-message ${tipo}`;
+
+    mensagem.className =
+        `status-message ${tipo}`.trim();
 }
 
-function obterRegistrosLocais() {
-    return JSON.parse(localStorage.getItem("atendimentosCTP")) || [];
-}
 
-function salvarRegistroLocal(registro) {
-    const registros = obterRegistrosLocais();
-    registros.push(registro);
-    localStorage.setItem("atendimentosCTP", JSON.stringify(registros));
-}
+// ============================================================
+// DATA ATUAL
+// ============================================================
 
-async function enviarParaPowerAutomate(registro) {
-    if (!POWER_AUTOMATE_URL) {
-        salvarRegistroLocal(registro);
-        return {
-            modo: "local",
-            sucesso: true
-        };
+function definirDataAtual() {
+    const campoData =
+        document.getElementById("data");
+
+    if (!campoData || campoData.value) {
+        return;
     }
 
-    const resposta = await fetch(POWER_AUTOMATE_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(registro)
-    });
+    const agora = new Date();
 
-    if (!resposta.ok) {
-        throw new Error("Erro ao enviar para o Power Automate.");
-    }
+    const ano =
+        agora.getFullYear();
+
+    const mes =
+        String(
+            agora.getMonth() + 1
+        ).padStart(2, "0");
+
+    const dia =
+        String(
+            agora.getDate()
+        ).padStart(2, "0");
+
+    campoData.value =
+        `${ano}-${mes}-${dia}`;
+}
+
+
+// ============================================================
+// FUNÇÕES AUXILIARES
+// ============================================================
+
+function limparTexto(valor) {
+    return String(
+        valor ?? ""
+    ).trim();
+}
+
+
+function textoOuNull(valor) {
+    const texto =
+        limparTexto(valor);
+
+    return texto || null;
+}
+
+
+// ============================================================
+// MONTA O JSON ENVIADO AO POWER AUTOMATE
+// ============================================================
+
+function montarPayload(form) {
+    const dados =
+        new FormData(form);
 
     return {
-        modo: "powerAutomate",
-        sucesso: true
+
+        // ----------------------------------------------------
+        // ASSUNTO / TÍTULO
+        // ----------------------------------------------------
+
+        Assunto:
+            limparTexto(
+                dados.get("assunto")
+            ) ||
+            "Atendimento técnico-pedagógico",
+
+
+        // ----------------------------------------------------
+        // DATA E HORÁRIOS
+        // ----------------------------------------------------
+
+        Data:
+            limparTexto(
+                dados.get("data")
+            ),
+
+        HorarioInicial:
+            limparTexto(
+                dados.get("horarioInicial")
+            ),
+
+        // Pode ser null enquanto o atendimento
+        // ainda estiver em andamento.
+        HorarioFinal:
+            textoOuNull(
+                dados.get("horarioFinal")
+            ),
+
+
+        // ----------------------------------------------------
+        // DADOS DO ATENDIMENTO
+        // ----------------------------------------------------
+
+        Canal:
+            limparTexto(
+                dados.get("canal")
+            ),
+
+        Instituicao:
+            limparTexto(
+                dados.get("instituicao")
+            ),
+
+        NomeContato:
+            limparTexto(
+                dados.get("nome")
+            ),
+
+        CargoAtendido:
+            limparTexto(
+                dados.get("cargo")
+            ),
+
+        TipoAtendimento:
+            limparTexto(
+                dados.get("tipoAtendimento")
+            ),
+
+        Programa:
+            limparTexto(
+                dados.get("programa")
+            ),
+
+
+        // ----------------------------------------------------
+        // CAMPOS COM MÚLTIPLAS OPÇÕES
+        // ----------------------------------------------------
+
+        Segmentos:
+            dados
+                .getAll("segmento")
+                .map(limparTexto)
+                .filter(Boolean)
+                .join(", "),
+
+        Tecnologias:
+            dados
+                .getAll("tecnologia")
+                .map(limparTexto)
+                .filter(Boolean)
+                .join(", "),
+
+
+        // ----------------------------------------------------
+        // AULA / ATIVIDADE
+        // ----------------------------------------------------
+
+        AulaAtividade:
+            textoOuNull(
+                dados.get("aulaAtividade")
+            ),
+
+
+        // ----------------------------------------------------
+        // PROBLEMA E SOLUÇÃO
+        // ----------------------------------------------------
+
+        DescricaoProblema:
+            limparTexto(
+                dados.get("descricaoProblema")
+            ),
+
+        // Pode ser null durante a abertura.
+        DescricaoSolucao:
+            textoOuNull(
+                dados.get("descricaoSolucao")
+            )
     };
 }
 
-function iniciarFormulario() {
-    const form = document.getElementById("formAtendimento");
-    if (!form) return;
 
-    const campoData = document.getElementById("data");
-    if (campoData && !campoData.value) {
-        campoData.valueAsDate = new Date();
+// ============================================================
+// ENVIA O ATENDIMENTO PARA O POWER AUTOMATE
+// ============================================================
+
+async function enviarNovoAtendimento(
+    payload
+) {
+
+    // --------------------------------------------------------
+    // Verifica se a URL está configurada
+    // --------------------------------------------------------
+
+    if (
+        typeof POWER_AUTOMATE_URL ===
+            "undefined" ||
+        !POWER_AUTOMATE_URL ||
+        POWER_AUTOMATE_URL.includes(
+            "COLE_AQUI"
+        )
+    ) {
+
+        throw new Error(
+            "POWER_AUTOMATE_URL não está configurada no config.js."
+        );
     }
 
-    form.addEventListener("submit", async function(event) {
-        event.preventDefault();
 
-        const dados = new FormData(form);
+    // --------------------------------------------------------
+    // Envia para o Power Automate
+    // --------------------------------------------------------
 
-        const horarioInicial = dados.get("horarioInicial");
-        const horarioFinal = dados.get("horarioFinal");
-        const duracaoMinutos = calcularDuracaoMinutos(horarioInicial, horarioFinal);
+    const resposta =
+        await fetch(
+            POWER_AUTOMATE_URL,
+            {
+                method: "POST",
 
-        if (duracaoMinutos <= 0) {
-            mostrarMensagem("Verifique os horários. O horário final precisa ser maior que o horário inicial.", "error");
-            return;
-        }
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
 
-        const registro = {
-            "ID": gerarId(),
-            "Data": dados.get("data"),
-            "Horário Inicial do Atendimento": horarioInicial,
-            "Horário Final do Atendimento": horarioFinal,
-            "Canal": dados.get("canal"),
-            "Instituição": dados.get("instituicao"),
-            "Nome": dados.get("nome"),
-            "Cargo": dados.get("cargo"),
-            "Tipo de Atendimento": dados.get("tipoAtendimento"),
-            "Segmento": dados.getAll("segmento").join(", "),
-            "Programa": dados.get("programa"),
-            "Tecnologia Envolvida": dados.getAll("tecnologia").join(", "),
-            "Aula ou Atividade": dados.get("aulaAtividade"),
-            "Descrição do Problema": dados.get("descricaoProblema"),
-            "Descrição da Solução": dados.get("descricaoSolucao"),
-            "Duração em Minutos": duracaoMinutos,
-            "Duração Formatada": formatarDuracao(duracaoMinutos),
-            "Mês": dados.get("data") ? dados.get("data").substring(5, 7) : "",
-            "Ano": dados.get("data") ? dados.get("data").substring(0, 4) : "",
-            "Criado Em": new Date().toISOString(),
-            "Status": dados.get("statusAtendimento")
-        };
+                body:
+                    JSON.stringify(
+                        payload
+                    )
+            }
+        );
+
+
+    // --------------------------------------------------------
+    // Lê a resposta
+    // --------------------------------------------------------
+
+    const texto =
+        await resposta.text();
+
+    let retorno = null;
+
+
+    if (texto) {
 
         try {
-            const resultado = await enviarParaPowerAutomate(registro);
 
-            if (resultado.modo === "local") {
-                mostrarMensagem("Atendimento salvo em modo de teste neste navegador.", "success");
-            } else {
-                salvarRegistroLocal(registro);
-                mostrarMensagem("Atendimento enviado com sucesso para a planilha.", "success");
-            }
+            retorno =
+                JSON.parse(
+                    texto
+                );
 
-            form.reset();
-            const campoData = document.getElementById("data");
-            if (campoData) campoData.valueAsDate = new Date();
+        } catch {
 
-        } catch (erro) {
-            console.error(erro);
-            mostrarMensagem("Não foi possível salvar o atendimento. Verifique a integração e tente novamente.", "error");
+            retorno = {
+                mensagem: texto
+            };
         }
-    });
-}
-
-function contarPorCampo(registros, campo) {
-    const contagem = {};
-
-    registros.forEach(registro => {
-        const valor = registro[campo] || "Não informado";
-        contagem[valor] = (contagem[valor] || 0) + 1;
-    });
-
-    return contagem;
-}
-
-function obterMaiorCategoria(contagem) {
-    const entradas = Object.entries(contagem);
-
-    if (entradas.length === 0) return "-";
-
-    entradas.sort((a, b) => b[1] - a[1]);
-    return entradas[0][0];
-}
-
-function iniciarDashboard() {
-    const totalAtendimentos = document.getElementById("totalAtendimentos");
-    if (!totalAtendimentos) return;
-
-    const registros = obterRegistrosLocais();
-
-    const totalMinutos = registros.reduce((soma, item) => soma + Number(item["Duração em Minutos"] || 0), 0);
-    const canalMaisUsado = obterMaiorCategoria(contarPorCampo(registros, "Canal"));
-
-    document.getElementById("totalAtendimentos").textContent = registros.length;
-    document.getElementById("totalHoras").textContent = formatarDuracao(totalMinutos);
-    document.getElementById("principalCanal").textContent = canalMaisUsado;
-
-    const tabela = document.getElementById("tabelaRegistros");
-    tabela.innerHTML = "";
-
-    registros.slice().reverse().forEach(registro => {
-        const linha = document.createElement("tr");
-
-        linha.innerHTML = `
-            <td>${registro["Data"] || ""}</td>
-            <td>${registro["Canal"] || ""}</td>
-            <td>${registro["Instituição"] || ""}</td>
-            <td>${registro["Nome"] || ""}</td>
-            <td>${registro["Cargo"] || ""}</td>
-            <td>${registro["Tecnologia Envolvida"] || ""}</td>
-            <td>${registro["Duração Formatada"] || ""}</td>
-        `;
-
-        tabela.appendChild(linha);
-    });
-
-    const botaoLimpar = document.getElementById("limparDados");
-    if (botaoLimpar) {
-        botaoLimpar.addEventListener("click", function() {
-            const confirmar = confirm("Deseja apagar os dados de teste salvos neste navegador?");
-            if (confirmar) {
-                localStorage.removeItem("atendimentosCTP");
-                location.reload();
-            }
-        });
     }
+
+
+    // --------------------------------------------------------
+    // Tratamento de erro HTTP
+    // --------------------------------------------------------
+
+    if (!resposta.ok) {
+
+        const detalhe =
+            retorno?.mensagem ||
+            retorno?.error?.message ||
+            texto ||
+            "O fluxo não retornou detalhes.";
+
+        throw new Error(
+            `Falha ao registrar atendimento. HTTP ${resposta.status}. ${detalhe}`
+        );
+    }
+
+
+    // --------------------------------------------------------
+    // Retorno padrão
+    // --------------------------------------------------------
+
+    return (
+        retorno || {
+            sucesso: true,
+
+            mensagem:
+                "Atendimento registrado com sucesso."
+        }
+    );
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    iniciarFormulario();
-    iniciarDashboard();
-});
+
+// ============================================================
+// INICIALIZAÇÃO DO FORMULÁRIO
+// ============================================================
+
+function iniciarFormulario() {
+
+    const form =
+        document.getElementById(
+            "formAtendimento"
+        );
+
+    if (!form) {
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // Preenche a data atual
+    // --------------------------------------------------------
+
+    definirDataAtual();
+
+
+    // --------------------------------------------------------
+    // Botão salvar
+    // --------------------------------------------------------
+
+    const botaoSalvar =
+        form.querySelector(
+            'button[type="submit"]'
+        );
+
+    const textoOriginalBotao =
+        botaoSalvar?.textContent ||
+        "Iniciar atendimento";
+
+
+    // ========================================================
+    // ENVIO DO FORMULÁRIO
+    // ========================================================
+
+    form.addEventListener(
+        "submit",
+
+        async function(event) {
+
+            event.preventDefault();
+
+
+            // ------------------------------------------------
+            // Limpa mensagens antigas
+            // ------------------------------------------------
+
+            mostrarMensagem(
+                "",
+                ""
+            );
+
+
+            // ------------------------------------------------
+            // Validação HTML
+            // ------------------------------------------------
+
+            if (
+                !form.checkValidity()
+            ) {
+
+                form.reportValidity();
+
+                return;
+            }
+
+
+            // ------------------------------------------------
+            // Monta JSON
+            // ------------------------------------------------
+
+            const payload =
+                montarPayload(
+                    form
+                );
+
+
+            // ------------------------------------------------
+            // Valida horário final somente se ele foi informado
+            // ------------------------------------------------
+
+            if (
+                payload.HorarioFinal
+            ) {
+
+                const duracaoMinutos =
+                    calcularDuracaoMinutos(
+                        payload.HorarioInicial,
+                        payload.HorarioFinal
+                    );
+
+
+                if (
+                    duracaoMinutos === -1
+                ) {
+
+                    mostrarMensagem(
+                        "Verifique os horários. Quando informado, o horário final precisa ser maior que o horário inicial.",
+                        "error"
+                    );
+
+                    return;
+                }
+            }
+
+
+            // ------------------------------------------------
+            // Desabilita botão durante o envio
+            // ------------------------------------------------
+
+            if (botaoSalvar) {
+
+                botaoSalvar.disabled =
+                    true;
+
+                botaoSalvar.textContent =
+                    "Salvando...";
+            }
+
+
+            try {
+
+                // --------------------------------------------
+                // Chama Power Automate
+                // --------------------------------------------
+
+                const retorno =
+                    await enviarNovoAtendimento(
+                        payload
+                    );
+
+
+                // --------------------------------------------
+                // Número retornado pelo fluxo
+                // --------------------------------------------
+
+                const numeroAtendimento =
+                    retorno?.NumeroAtendimento ||
+                    retorno?.numeroAtendimento ||
+                    "";
+
+
+                // --------------------------------------------
+                // Mensagem final
+                // --------------------------------------------
+
+                const mensagemSucesso =
+                    numeroAtendimento
+                        ? `Atendimento ${numeroAtendimento} iniciado com sucesso.`
+                        : (
+                            retorno?.mensagem ||
+                            "Atendimento iniciado com sucesso."
+                        );
+
+
+                mostrarMensagem(
+                    mensagemSucesso,
+                    "success"
+                );
+
+
+                // --------------------------------------------
+                // Limpa formulário
+                // --------------------------------------------
+
+                form.reset();
+
+
+                // --------------------------------------------
+                // Recoloca a data atual
+                // --------------------------------------------
+
+                definirDataAtual();
+
+
+                // --------------------------------------------
+                // Volta para o topo
+                // --------------------------------------------
+
+                window.scrollTo({
+                    top: 0,
+
+                    behavior:
+                        "smooth"
+                });
+
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao registrar atendimento:",
+                    erro
+                );
+
+
+                mostrarMensagem(
+                    erro?.message ||
+                    "Não foi possível iniciar o atendimento. Verifique a integração e tente novamente.",
+                    "error"
+                );
+
+
+            } finally {
+
+                // --------------------------------------------
+                // Reativa botão
+                // --------------------------------------------
+
+                if (botaoSalvar) {
+
+                    botaoSalvar.disabled =
+                        false;
+
+                    botaoSalvar.textContent =
+                        textoOriginalBotao;
+                }
+            }
+        }
+    );
+}
+
+
+// ============================================================
+// CARREGA O FORMULÁRIO
+// ============================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    iniciarFormulario
+);
